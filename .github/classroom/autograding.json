@@ -12,7 +12,7 @@
     },
     {
       "name": "Hidden Case Test",
-      "setup": "sudo -H pip3 install pytest",
+      "setup": "sudo -H pip3 install pytest pylint",
       "run": "pytest slimebox_cases_test.py",
       "input": "",
       "output": "",
