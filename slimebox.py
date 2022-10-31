@@ -9,14 +9,16 @@ MIT License
 
 """
 
+
 # Your instructions:
 # If there's any "pass", implement it.
 # If there's any "TODO", follow the instructions.
 # For any logic concerns, read the main problem statement.
 # Resolve any remaining doctest and program errors and you should be fine.
 
-import functools
-import copy
+# import functools
+# import copy
+
 
 def clamp(x: int, low: int, high: int) -> int:
     """ Clamps value x so it is within the [low, high] range.
@@ -40,15 +42,25 @@ def clamp(x: int, low: int, high: int) -> int:
     # You might see it again later. Note that you need to also write
     # "doctest: +IGNORE_EXCEPTION_DETAIL".
 
-    pass
+    if x in range(low, high + 1):
+        return x
+    if low > high:
+        raise ValueError('low cannot be higher than high')
+    if x < low:
+        return low
+    if x > high:
+        return high
+    return None
+
 
 class Color:
     """ This is the Color class used to color slimes. """
 
     def __init__(self, r: int = 0, g: int = 0, b: int = 0) -> None:
         """ Creates a color coordinate based on RGB values. """
-        pass
-
+        self.__r = clamp(r, 0, 255)
+        self.__g = clamp(g, 0, 255)
+        self.__b = clamp(b, 0, 255)
 
     @property
     def r(self):
@@ -66,12 +78,25 @@ class Color:
         255
         """
         return self.__r
-
     @r.setter
     def r(self, new_r):
-        pass
+        self.__r = clamp(new_r, 0, 255)
 
-    # TODO: Implement "g" and "b" in the same way.
+    @property
+    def g(self):
+        """ Sets the green component of the color. Don't forget to clamp! """
+        return self.__g
+    @g.setter
+    def g(self, new_g):
+        self.__g = clamp(new_g, 0, 255)
+
+    @property
+    def b(self):
+        """ Sets the blue component of the color. Don't forget to clamp! """
+        return self.__b
+    @b.setter
+    def b(self, new_b):
+        self.__b = clamp(new_b, 0, 255)
 
     def __str__(self):
         return f"Color({self.r}, {self.g}, {self.b})"
@@ -84,17 +109,22 @@ class Color:
         >>> col_1 == col_2
         True
         """
-        pass
+        if self.r == other.r and self.g == other.g and self.b == other.b:
+            return True
+        return False
 
     # When a class wants to type-hint itself, you must add quotes around the
     # class name (turning it into a string). Don't worry, as there is actually
     # no type enforcement (from Python's perspective) anyway.
 
+
 def mix_colors(color1, color2, weight1=1, weight2=1):
     """ Mix colors, with given weights. """
+    r = ((color1.r * weight1) + (color2.r * weight2)) / (weight1 + weight2)
+    g = ((color1.g * weight1) + (color2.g * weight2)) / (weight1 + weight2)
+    b = ((color1.b * weight1) + (color2.b * weight2)) / (weight1 + weight2)
+    return Color(int(r), int(g), int(b))
 
-    pass
-    return Color(r, g, b)
 
 class Slime:
     """ Slimes are interesting creatures and they are defined by this class. """
@@ -107,35 +137,35 @@ class Slime:
     @property
     def color(self):
         """ Color property represents the color of the slime. """
-        pass
+        return self.__color
 
     @color.setter
     def color(self, new_color):
-        pass
+        self.__color = new_color
 
     @property
     def mass(self):
         """ Mass defines how heavy a slime is, and who will become the primary
             parent (P1) in case of breeding. Must be >= 0.
         """
-        pass
+        return self.__mass
 
     @mass.setter
     def mass(self, new_mass):
-        pass
+        self.__mass = new_mass
 
     @property
     def volume(self):
         """ Volume defines how big a slime is, and whether it will fit in a box.
             Must be >= 0.
         """
-        pass
+        return self.__volume
 
     @volume.setter
-    def volume(self, newVolume):
-        pass
+    def volume(self, newvolume):
+        self.__volume = newvolume
 
-    def eat(self, food_mass: int = 0, food_type = "L"):
+    def eat(self, food_mass: int = 0, food_type="L"):
         """ The slime eats and grows.
 
             If liquid food, mass is increased by 90% of food mass, and volume
@@ -158,9 +188,10 @@ class Slime:
             190
         """
         if food_type == "L":
-            pass
+            self.mass += int(0.9 * food_mass)
+            self.volume += int(0.9 * food_mass)
         elif food_type == "S":
-            pass
+            self.mass += int(food_mass * 0.4)
         else:
             raise ValueError("food type must be L or S")
 
@@ -184,10 +215,19 @@ class Slime:
               ...
             ValueError: 'Copies must be larger than 0.'
         """
-        pass
+        if copies > 1:
+            hi = []
+            for x in range(copies):
+                hi.append(Slime(self.mass // copies, self.volume // copies, self.color))
+            return hi
+        if copies == 1:
+            return [self]
+        if copies < 1:
+            raise ValueError('Copies must be larger than 0.')
 
     def __eq__(self, other):
-        pass
+        if self.__mass == other.__mass and self.__volume == other.__volume:
+            return True
 
     def __str__(self):
         return f"Slime({self.mass}, {self.volume}, {self.color})"
@@ -204,11 +244,13 @@ class Slime:
         >>> print(str(slime3 + slime4))
         Slime(10, 2, Color(90, 90, 90))
         """
-        pass
+        return Slime(int(self.mass + other.mass), int(self.volume + other.volume),
+                     mix_colors(self.color, other.color, self.mass, other.mass))
+
 
 if __name__ == "__main__":
     import doctest
+
     doctest.testmod()
     # Use the following line INSTEAD if you want to print all tests anyway.
     # doctest.testmod(verbose = True)
-

@@ -65,6 +65,7 @@ def main(filename):
         elif op == 'COMBINE':
             index2 = int(values[2])
             slimes[index] = slimes[index] + slimes[index2]
+            slimes[index2] = None
 
     for (index, slime) in enumerate(slimes):
         if slime is not None:
