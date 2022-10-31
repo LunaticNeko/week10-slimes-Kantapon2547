@@ -125,7 +125,7 @@ def test_slime_combine():
 def test_privacy():
     c = Color()
     s = Slime()
-    assert all([key.startswith('_') for key in (vars(c) | vars(s)).keys()])
+    assert all([key.startswith('_') for key in (list(vars(c).keys()) + list(vars(s).keys()))])
 
 def test_case1(capsys):
     sim.main('case1.input')

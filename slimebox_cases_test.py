@@ -11,6 +11,6 @@ def test_case2(capsys):
 def test_case3(capsys):
     sim.main('case3.input')
     captured = capsys.readouterr()
-    assert hashlib.sha256(captured.out.strip().encode('utf_8')).hexdigest() == 'b2aca59de7e9a20948a3a3d173fc6097f0b1d744ccb7fedbd8600d351257178c'
+    assert hashlib.sha256(captured.out.strip().encode('utf_8')).hexdigest() == '797537f648c57488d72c5fbcd3730c7a452ecf3fc269e82df4f21703b7d36df1'
 
 
